@@ -1,1 +1,45 @@
-script: bin/first
+pipeline:
+  - docs_unit
+  - dw_unit
+  - site_unit
+  - site_integration
+  - site_integration_predix_ui
+  - worker_unit
+  - build_and_push_all
+
+edges:
+  - site_unit: docs_unit
+  - site_unit: dw_unit
+  - site_unit: site_integration
+  - site_integration: site_integration_predix_ui
+  
+profiles:
+    docs_unit:
+       tests:
+       - 'echo docs_unit & sleep 10'
+    dw_unit:
+       tests: 
+       - 'echo dw_unit & sleep 10'
+    site_unit:
+      tests: 
+      - 'echo site_unit & sleep 10'
+      profile_config:
+      advance_on:                   
+        - branch: "*"
+          advance_on: "always"
+    site_integration:
+      tests: 
+      - 'echo site_integration & sleep 10'
+      profile_config:
+      advance_on:                   
+        - branch: "*"
+          advance_on: "always"
+    site_integration_predix_ui:
+      tests: 
+      - 'echo site_integration_predix_ui & sleep 10' 
+    worker_unit:
+      tests: 
+      - 'echo worker_unit & sleep 10' 
+    build_and_push_all:
+      tests: 
+      - 'echo build_and_push_all & sleep 10'   
